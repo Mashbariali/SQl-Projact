@@ -1,0 +1,74 @@
+# DDL - Create
+create database store ;
+
+use store;
+create table countries(
+    code int primary key ,
+  name varchar(20) NOT NULL,
+  continent_name varchar(20) UNIQUE
+);
+
+use store;
+create table users(
+     id int primary key ,
+    full_name varchar(20),
+    email varchar(20) unique ,
+    gender char(1)  ,
+    date_of_birth varchar(15) ,
+    created_at datetime default current_timestamp ,
+    country_code int ,
+    foreign key (country_code) references countries(id),
+    check(gender in ('m', 'f'))
+);
+
+use store;
+create table orders(
+     id int primary key ,
+   user_id int ,
+    foreign key (user_id) references users(id),
+    status varchar(6),
+    created_at datetime default current_timestamp ,
+    check(status in ('start', 'finish'))
+);
+
+use store;
+create table products(
+     id int primary key ,
+     name varchar(10) not null,
+     price int default 0,
+    status varchar(10),
+    created_at datetime default current_timestamp ,
+    check(status in ('valid', 'expired'))
+);
+
+use store;
+create table order_products(
+   order_id int ,
+    foreign key (order_id) references orders(id),
+    product_id  int ,
+    foreign key (product_id) references products(id),
+    quantity int default 0 ,
+    primary key (order_id,product_id)
+);
+
+# DML - Insert
+insert into countries (code,name,continent_name)
+values(321,'riyadh','asia');
+
+insert into users (id,full_name,email,gender,date_of_birth,country_code)
+values(13,'Ali qasim','aa@gmail.com','m','2/2/2022',145);
+
+insert into orders (id,user_id,status)
+values(8,55,'start');
+
+insert into products (id,name,price,status)
+values(4,'food',10,'valid');
+
+insert into order_products (order_id,product_id,quantity)
+values(9,3,10);
+
+# DML - Update
+update countries set name='jazan' where code='321';
+
+# DML - Delete
+delete from products  where id='4';
